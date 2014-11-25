@@ -22,7 +22,7 @@ func createConfigFile(backends []Backend, templateFile, outputFile string)(error
             return err
         }
     }
-    
+
     return tpl.Execute(cfgFile, backends)
 }
 
@@ -34,9 +34,9 @@ func reloadHAproxy(command, configFile string)(error){
         go cmd.Wait()
     } else{
         log.Println("Restart HAproxy")
-        cmd = exec.Command(command,"-f",configFile,"-sf",strconv.Itoa(pid))
+        cmd = exec.Command(command,"-f",configFile,"-p",strconv.Itoa(pid),"-sf",strconv.Itoa(pid))
     }
-    
+
     err := cmd.Start()
     if (err == nil){
         pid = cmd.Process.Pid
