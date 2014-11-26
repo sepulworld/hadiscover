@@ -11,7 +11,7 @@ var name     = flag.String("name","back","Base name used for backends")
 var etcdHost = flag.String("etcd","http://localhost:4001","etcd server(s)")
 var etcdKey  = flag.String("key","services","etcd root key to look for")
 
-var configFile = "haproxy.cfg"
+var configFile = "/etc/haproxy/haproxy.cfg"
 
 func reloadConf(etcdClient *etcd.Client)(error){
     backends,_ := GetBackends(etcdClient,*etcdKey,*name)
@@ -51,6 +51,6 @@ func main(){
     log.Println("Start watching changes in etcd")
     if _, err := etcdClient.Watch(*etcdKey,0, true, changeChan, stopChan) ; err != nil{
         log.Println("Cannot register watcher for changes in etcd: ",err)
-    }    
+    }
 
 }
