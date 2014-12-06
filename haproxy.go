@@ -5,6 +5,7 @@ import(
     "os"
     "os/exec"
     "log"
+    "strconv"
 )
 
 var tpl *template.Template = nil
@@ -25,15 +26,15 @@ func createConfigFile(backends []Backend, templateFile, outputFile string)(error
     return tpl.Execute(cfgFile, backends)
 }
 
-func reloadHAproxy()(error){
+func reloadHAproxy(command, configFile string)(error){
     var cmd *exec.Cmd = nil
     if pid == -1{
         log.Println("Start HAproxy")
-        cmd = exec.Command("service","haproxy","start")
+        cmd = exec.Command(command,"-f",configFile)
         go cmd.Wait()
     } else{
         log.Println("Restart HAproxy")
-        cmd = exec.Command("service","haproxy","reload")
+        cmd = exec.Command(command,"-f",configFile,"-sf",strconv.Itoa(pid))
     }
 
     err := cmd.Run()
@@ -43,3 +44,4 @@ func reloadHAproxy()(error){
     }
     return err
 }
+

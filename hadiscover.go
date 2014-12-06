@@ -8,10 +8,11 @@ import (
 
 var filename = flag.String("config","./haproxy.cfg.tpl","Template config file used for HAproxy")
 var name     = flag.String("name","back","Base name used for backends")
+var haproxy  = flag.String("ha","/usr/bin/haproxy","Path to the `haproxy` executable")
 var etcdHost = flag.String("etcd","http://localhost:4001","etcd server(s)")
 var etcdKey  = flag.String("key","services","etcd root key to look for")
 
-var configFile = "/etc/haproxy/haproxy.cfg"
+var configFile = ".haproxy.cfg"
 
 func reloadConf(etcdClient *etcd.Client)(error){
     backends,_ := GetBackends(etcdClient,*etcdKey,*name)
@@ -21,7 +22,7 @@ func reloadConf(etcdClient *etcd.Client)(error){
         log.Println("Cannot generate haproxy configuration: ",err)
         return err
     }
-    return reloadHAproxy()
+    return reloadHAproxy(*haproxy, configFile)
 }
 
 func main(){
