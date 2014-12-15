@@ -36,7 +36,7 @@ func reloadHAproxy()(error){
         cmd = exec.Command("service","haproxy","reload")
     }
 
-    err := cmd.Run()
+    err := cmd.Start()
     if (err == nil){
         pid = cmd.Process.Pid
         log.Println("New pid: ",pid)
