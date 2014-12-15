@@ -37,7 +37,7 @@ func reloadHAproxy(command, configFile string)(error){
         cmd = exec.Command(command,"-f",configFile,"-sf",strconv.Itoa(pid))
     }
 
-    err := cmd.Run()
+    err := cmd.Start()
     if (err == nil){
         pid = cmd.Process.Pid
         log.Println("New pid: ",pid)
